@@ -1,0 +1,275 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+	    <meta charset="UTF-8">
+	    <title>Title</title>
+	</head>
+	<body>
+
+		<div class="menu navbar">
+		    <div class="navbar-inner">
+		      <ul class="nav">
+		        <li><a href="#" >Home</a></li>
+		        <li ><a href="#/single" >Single</a></li>
+		        <li><a href="#/list">List</a></li>
+		      </ul>
+		    </div>
+		</div>
+
+		<div id="singleItemView"> 
+			Boilerplate single item injected here...
+		</div>
+
+		<div id="listItemView">
+			Boilerplate list injectected here....
+		</div>
+
+		<div id="songs">
+			<a href="http://open.spotify.com/track/57exMMIWTLMmwerkzcxcpu" target="_blank">song link</a>
+			<br/>
+			<a href="spotify:track:57exMMIWTLMmwerkzcxcpu">uri</a>
+			<br/>
+
+			<!--<iframe src="https://embed.spotify.com/?uri=spotify:track:57exMMIWTLMmwerkzcxcpu" width="200" height="80" frameborder="0" allowtransparency="true"></iframe>-->
+			<br/>
+			<iframe width="200" height="50" src="http://www.youtube.com/embed/afp_kTaksMg" frameborder="0" allowfullscreen></iframe>
+			<br/>
+			<iframe width="200" height="50" src="http://www.youtube.com/embed/rMo5bJzLcCE" frameborder="0" allowfullscreen></iframe>
+			<br/>
+			<iframe width="200" height="50" src="http://www.youtube.com/embed/DEiWXz3BkpA" frameborder="0" allowfullscreen></iframe>
+
+		</div>
+
+		<!-- functional library -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<!--
+		removes annoying warning on event handling -- http://code.jquery.com/jquery-1.11.0-beta1.js 
+		See: http://stackoverflow.com/questions/20045162/jquery-error-event-returnvalue-is-deprecated-please-use-the-standard-event-pre for details
+		-->
+		<script src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+		<script src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
+
+		<!-- boilerplate element template -->
+		<script type="text/template" id="boilerplate-template">
+				Boilerplate template with custom data:<em> <%= attr1 %></em> and <em><%= attr2 %></em>		
+		</script>
+
+		<!-- boilerplate list template -->
+		
+		<script type="text/template" id="boilerplate-list-template">
+    		<ul>
+    			<% _.each(items, function(item) { %>
+    				<li>item:<em><%=item.attr1%> - </em><em><%=item.attr2%></em>
+    				</li>
+        		<%});
+        		%>
+    		</ul >
+		</script>
+
+		<script type="text/template" id="spotifyTrackTemplate">
+			<iframe src="https://embed.spotify.com/?uri=spotify:track:<%=trackURI%>" width="<%=width%>" height="<%=height%>" frameborder="0" allowtransparency="true"><%=trackURI%></iframe>
+		</script>
+
+		<!-- application code -->
+		<script>
+
+			var spotifyTrackMarkup = $("#spotifyTrackTemplate").html();
+			console.log(spotifyTrackMarkup);
+			var compiledSpotifyTrackTpl = _.template(spotifyTrackMarkup, {trackURI:"57exMMIWTLMmwerkzcxcpu",width:"200",height:"80"});
+			console.log(compiledSpotifyTrackTpl)
+			$("#songs").append("<br/>"+compiledSpotifyTrackTpl);
+
+
+			/* 
+				boilerplate model
+			*/
+			var BoilerPlateModel = Backbone.Model.extend({
+
+					initialize: function(){
+			  			console.log('BoilerPlate model has been initialized.');
+
+			  			//attribute value change event handlers
+			  			this.on('change', function(){
+		        			console.log('- Value for BoilerPlateModel instance attribute changed.');
+		    			});
+			  			this.on('change:attr1', function(){
+		        			console.log('- Value for attr1 of BoilerPlateModel instance changed.');
+		    			});
+		    			this.on('change:attr2', function(){
+		        			console.log('- Value for attr2 of BoilerPlateModel instance changed.');
+		    			});
+
+		    			//error handlers
+		    			this.on('invalid',function(model,error){
+		    				console.log(error);
+		    			})
+					},
+					//data validation
+					validate:function(attribs) {
+						if (!attribs.attr1) {
+		    				return 'never and I mean NEVER unset boilerplate attribute attr1';
+						}
+					},
+					defaults: {
+						attr1: 'boilerplate default for attr1',
+						attr2: 'boilerplate default for attr2'
+					}
+			});
+
+
+
+
+			
+			/*
+			boilerplate view
+			*/
+			var BoilerPlateSingleView = Backbone.View.extend({
+
+			  el:  '#singleItemView',
+
+			  // Cache the template function
+			  boilerplateTplMarkup: $('#boilerplate-template').html(),
+
+			  events: {
+			    'click': 'bpEventHandlerMethod',
+			  },
+
+			  // Rerender the titles of the todo item.
+			  render: function() {
+			    compiledBoilerplateTpl =  _.template(this.boilerplateTplMarkup, this.model.toJSON());
+			 	console.log(this.boilerplateTplMarkup);
+			 	console.log(compiledBoilerplateTpl);
+			    this.$el.html( compiledBoilerplateTpl );
+			    console.log(this.$el.html());
+
+			    return this;
+			  },
+			  destroy_view: function() {
+
+			    //COMPLETELY UNBIND THE VIEW
+			    this.undelegateEvents();
+
+			    this.$el.removeData().unbind(); 
+
+			    this.$el.html("");
+
+			    //Remove view from DOM
+			    //this.remove();  
+			    //Backbone.View.prototype.remove.call(this);
+
+
+			    },
+
+			  bpEventHandlerMethod: function(e) {
+			    console.log("boilerplate event handler method activated");
+			  }
+			});
+
+
+
+			/*
+			Boilerplate List View
+			*/
+			var BoilerPlateListView = Backbone.View.extend({
+				el:"#listItemView",
+				template:_.template($('#boilerplate-list-template').html()),
+				render: function(){
+					 this.$el.html(this.template({ items: this.collection.toJSON() }));
+					 return this;
+				},
+				destroy_view: function() {
+
+			    //COMPLETELY UNBIND THE VIEW
+			    this.undelegateEvents();
+
+			    this.$el.removeData().unbind(); 
+
+			    this.$el.html("");
+
+			    //Remove view from DOM
+			    //this.remove();  
+			    //Backbone.View.prototype.remove.call(this);
+
+			    }
+
+			});
+
+
+			
+
+			//Step 1a: instantiate models supplying boilerplate content
+			var bp1 = new BoilerPlateModel({
+			  attr1: 'boilerplate model 1 attribute 1',
+			  attr2: 'boilerplate model 1 attribute 2',
+			});
+
+			var bp2 = new BoilerPlateModel({
+			  attr1: 'boilerplate model 2 attribute 1',
+			  attr2: 'boilerplate model 2attribute 2',
+			}); 
+			
+
+			//Step 1b: play arround with model attribute setters/unsetters
+			bp1.set({attr2:"reset boilerplate attrib2"})
+			bp1.unset('attr1',{validate: true});
+
+			//Step 1c: play around with model attribute getters
+			console.log(bp1.get('attr1'));
+			console.log("boilerplateModel....");
+			console.log(bp1.toJSON());
+
+			//Step 2: Create a collection of the boilderplate models
+			var BoilerPlateCollection = Backbone.Collection.extend({
+  				model: BoilerPlateModel
+			});
+
+			var bpListCollection = new BoilerPlateCollection([bp1,bp2]);
+
+
+			//Step 2: instantiate a view and pass it the model instance instantiated in step 1a
+			var bpSingleItemView = new BoilerPlateSingleView({model:bp1});
+			var bpListView = new BoilerPlateListView({collection:bpListCollection});
+
+			//application code 
+
+			var AppRouter = Backbone.Router.extend({
+		        routes: {
+		        	"list": "showList",
+		        	"single":"showSingle",
+		            "*actions": "defaultRoute" // matches http://example.com/#anything-here
+		        }
+		    });
+		    // Initiate the router
+		    var app_router = new AppRouter;
+
+		    app_router.on('route:defaultRoute', function(actions) {
+		    	if (bpSingleItemView && bpListView) {
+		    		bpSingleItemView.destroy_view();
+		        	bpListView.destroy_view();
+		    	}
+		        
+		    });
+
+		    app_router.on('route:showSingle', function(actions) {
+		        console.log("show single");
+		        
+				bpSingleItemView.render();
+				console.log(bpSingleItemView.el); // logs <li></li>
+		    });
+
+		    app_router.on('route:showList', function(actions) {
+		        console.log("show list");
+		        
+				bpListView.render();
+		    });
+
+		    // Start Backbone history a necessary step for bookmarkable URL's
+		    Backbone.history.start();
+
+			
+
+			console.log("");
+
+		</script>
+	</body>
+</html>

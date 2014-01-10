@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+	    <meta charset="UTF-8">
+	    <title>Backbone Boilerplate Starter Page</title>
+	</head>
+	<body>
+
+		<div>
+			
+		</div>
+
+
+		<!-- functional library -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<!--
+		removes annoying warning on event handling -- http://code.jquery.com/jquery-1.11.0-beta1.js 
+		See: http://stackoverflow.com/questions/20045162/jquery-error-event-returnvalue-is-deprecated-please-use-the-standard-event-pre for details
+		-->
+		<script src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+		<script src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
+
+
+		<!-- application code -->
+		<script>
+			console.log("basic model boilerplate...");
+			var Photo = Backbone.Model.extend({
+			    defaults: {
+			        src: 'placeholder.jpg',
+			        title: 'an image placeholder',
+			        coordinates: [0,0]
+			    },
+			    initialize: function(){
+			        this.on("change:src", function(){
+			            var src = this.get("src");
+			            console.log('Image source updated to ' + src);
+			        });
+			        
+			        this.on("change:title", function(){
+			            var title = this.get("title");
+			            console.log('title updated to ' + title);
+			        });
+
+			        this.on("change:coordinates", function(){
+			            var coordinates = this.get("coordinates");
+			            console.log('coordinates updated to ' + coordinates);
+			        });
+			    },
+			    changeProperty: function( property ){
+			    	var changeToCommit = {};
+			    	changeToCommit[property.key] = property.val;
+			    	console.log(changeToCommit);
+			        this.set(changeToCommit);
+			    }
+			});
+
+			var somePhoto = new Photo({ src: "test.jpg", title:"testing"});
+
+			somePhoto.changeProperty({key:"title",val:"it is magic"}); 
+			$(function() {
+  				$("body").append("<p>DOM READY</p>");
+			});
+
+			
+
+		</script>
+	</body>
+</html>

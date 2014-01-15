@@ -32,8 +32,21 @@
 			
 			
 		</script>
-		<script type="text/template" id="youTubeTrackTemplate">
+		
+
+		<script type="text/template" id="sub_template">
+		  <article>
+		    <h1>id: <%= id %><h1>
+		  </article>
 		</script>
+
+		<script type="text/template" id="main_template">
+		  <% for (var i = 0; i < num; i++) { %>
+		    <%= renderSub({id:i}) %>
+		  <% } %>
+		</script>
+
+
 		<script>
 			var songListMarkup = $("#iframeTemplate").html();
 			
@@ -53,11 +66,17 @@
 			console.log(compiledYouTubeTrackTpl)
 			$("#youtube").append(compiledYouTubeTrackTpl);
 
+			var renderSub = _.template( $('#sub_template').remove().text() ),
+     		renderMain = _.template( $('#main_template').remove().text() );
+
+  			var output = renderMain({num:5, renderSub:renderSub});
+  			$("body").append(output);
+
+
 
 		</script>
 	</body>
 </html>
 
-<iframe src="https://embed.spotify.com/?uri=spotify:track:7rFVoyeEOWLwXN8sLV3PsZ" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>
 
 

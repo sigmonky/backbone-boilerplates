@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+	    <meta charset="UTF-8">
+	    <title>Backbone Boilerplate View--Dynamic El</title>
+	</head>
+	<body>
+		<!-- functional library -->
+		
+		<h1>Backbone View Boilerplate Demonstration -- With Dynamic $el</h1>
+
+		
+
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<!--
+		removes annoying warning on event handling -- http://code.jquery.com/jquery-1.11.0-beta1.js 
+		See: http://stackoverflow.com/questions/20045162/jquery-error-event-returnvalue-is-deprecated-please-use-the-standard-event-pre for details
+		-->
+		<script src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+		<script src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
+
+
+		<!-- application code -->
+		<script>
+			$(function() {
+
+				var BoilerplateDynamicView = Backbone.View.extend({
+					tagName:'div',
+				    id: 'boilerplateView',
+				    render: function( event ){
+				        this.$el
+				        	.append( "<div id='content'><div>event 0 -- startup rendering</div></div><div id='navbar'>	<button id='event1'>Event 1</button><button id='event2'>Event 2</button><button id='event3'>Event 3</button></div>" );
+				        $("body").append(this.$el);
+				        return this; //recommended as this enables calls to be chained.
+				    },
+				    events: {
+				        "click #event1": "event1",
+				        "click #event2": "event2",
+				        "click #event3": "event3"
+				    },
+				    event1: function( event ){
+				    	this.$el
+				    		.find("#content")
+				    		.append("<div>event 1 clicked</div>");
+				     },
+				    event2: function( event ){
+				        this.$el
+				        	.find("#content")
+				    		.append("<div>event 2 clicked</div>");
+				    },
+				    event3: function( event ){
+				       this.$el
+				       		.find("#content")
+				    		.append("<div>event 3 clicked</div>");
+				    }
+				});
+
+				bpDynamicView = new BoilerplateDynamicView();
+	  			bpDynamicView.render();
+                         
+             });
+			
+		</script>
+	</body>
+</html>

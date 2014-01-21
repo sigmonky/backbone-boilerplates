@@ -2,15 +2,9 @@
 <html>
 	<head>
 	    <meta charset="UTF-8">
-	    <title>Backbone Boilerplate Starter Page</title>
+	    <title>Backbone Boilerplate Collection</title>
 	</head>
 	<body>
-
-		<div>
-			
-		</div>
-
-
 		<!-- functional library -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<!--
@@ -23,13 +17,17 @@
 
 		<!-- application code -->
 		<script>
-			
-
+			var bpCollections = [];
+			someJsonObjects = [
+				{id:"1",content:"first json object"},
+				{id:"2",content:"second json object"},
+				{index:"3",blob:"third json object"}
+			];
 			$(function() {
-  				$("body").append("<p>DOM READY</p>");
+				var BoilerplateCollection1 = Backbone.Collection.extend();
+  				bpCollections[0] = new BoilerplateCollection1(someJsonObjects);
 
-  				console.log("basic model boilerplate...");
-				var Photo = Backbone.Model.extend({
+  				var Photo = Backbone.Model.extend({
 				    defaults: {
 				        src: 'placeholder.jpg',
 				        title: 'an image placeholder',
@@ -58,13 +56,17 @@
 				        this.set(changeToCommit);
 				    }
 				});
+				var photo = new Photo({ src: "test.jpg", title:"testing"});
 
-				var somePhoto = new Photo({ src: "test.jpg", title:"testing"});
+  				var  BoilerplateCollection2 = Backbone.Collection.extend({model:Photo});
+  				bpCollections[1] = new BoilerplateCollection2();
+  				bpCollections[1].add([photo]);
 
-				somePhoto.changeProperty({key:"title",val:"it is magic"}); 
+
+  				$("body").append("<div>first collection:" + JSON.stringify(bpCollections[0].toJSON()) + "</div>");
+  				$("body").append("<div>second collection:" + JSON.stringify(bpCollections[1].toJSON()) + "</div>");
 			});
 
-			
 
 		</script>
 	</body>

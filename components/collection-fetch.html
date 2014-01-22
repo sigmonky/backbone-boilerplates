@@ -3,6 +3,12 @@
   <head>
     <meta charset="UTF-8">
     <title>Backbone Boilerplate Fetch Collection Boilerplate</title>   
+    <style>
+        div {
+            margin-top:10px;
+            margin-bottom:10px;
+        }
+    </style>
   </head>
 
 <body>
@@ -23,7 +29,7 @@
 
     function fetchBasicPlaylist(artist) {
         console.log("fetching playback...");
-        var url = 'http://developer.echonest.com/api/v4/playlist/basic/';
+        var url = 'http://developer.echonest.com/api/v4/playlist/static/';
         console.log("Creating the playlist ...");
        
 
@@ -32,11 +38,11 @@
 
         requestParams.baseURL = "http://developer.echonest.com/api/v4";
         requestParams.serviceType = "playlist";
-        requestParams.service = "basic";
+        requestParams.service = "static";
 
         queryParams.api_key = "PZ4LKPTF5EEUFUVKM";
         queryParams.format = "json";
-        queryParams.results = "100";
+        queryParams.results = "20";
         queryParams.artist = artist;
         queryParams.bucket = ["id:spotify-WW","tracks"];
         queryParams.limit = "true";
@@ -54,26 +60,32 @@
                 success:
                     function(data) {
                         if (! ('songs' in data.response)) {
-                            error("Can't find that artist");
+                            $('body').html("couldn't find any songs for " + artist);
                         } else {
 
                             var tracks = "";
                             for (var i = 0; i < data.response.songs.length; i++) {
                                 var song = data.response.songs[i];
-                                console.log(song);
-                                var tid = song.tracks[0].foreign_id.replace('spotify-WW:track:', '');
+                                //console.log(song);
+                                var tid = song.tracks[0].foreign_id.replace('-WW', '');
                                 console.log(tid);
-                                tracks = tracks + tid + ',';
+                                //tracks = tracks + tid + ',';
+                                var link = "<div><a href='" + tid + "'>" + tid + "</div>";
+                                $('body').append(link);
                             }
      
                         }
-                    }
+                    },
+                error: 
+                    function(xhr, textStatus, errorThrown) {
+                        $('body').html(textStatus);
+                     }
             });
     }
 
     $(function() {
         $("body").append("<p>DOM READY</p>");
-        fetchBasicPlaylist("John Coltrane");
+        fetchBasicPlaylist("Big Bill Broonzy");
     });
 
 

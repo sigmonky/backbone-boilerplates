@@ -18,11 +18,13 @@
 		<!-- application code -->
 		<script>
 			var bpCollections = [];
+			
 			someJsonObjects = [
 				{id:"1",content:"first json object"},
 				{id:"2",content:"second json object"},
 				{index:"3",blob:"third json object"}
 			];
+			
 			$(function() {
 				var BoilerplateCollection1 = Backbone.Collection.extend();
   				bpCollections[0] = new BoilerplateCollection1(someJsonObjects);
@@ -56,6 +58,7 @@
 				        this.set(changeToCommit);
 				    }
 				});
+				
 				var photo = new Photo({ src: "test.jpg", title:"testing"});
 
   				var  BoilerplateCollection2 = Backbone.Collection.extend({model:Photo});

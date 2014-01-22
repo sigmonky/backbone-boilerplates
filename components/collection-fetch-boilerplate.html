@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+	    <meta charset="UTF-8">
+	    <title>Backbone Boilerplate:Collection Fetch/title>
+	</head>
+	<body>
+		<!-- functional library -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<!--
+		removes annoying warning on event handling -- http://code.jquery.com/jquery-1.11.0-beta1.js 
+		See: http://stackoverflow.com/questions/20045162/jquery-error-event-returnvalue-is-deprecated-please-use-the-standard-event-pre for details
+		-->
+		<script src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+		<script src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
+
+
+		<!-- application code -->
+		<script>
+			var bpCollection;
+			$(function() {
+ 
+  				console.log("application functionality goes here...");
+
+				var BoilerplateCollection = Backbone.Collection.extend({url:"http://developer.echonest.com/api/v4/playlist/static?api_key=PZ4LKPTF5EEUFUVKM&format=json&results=20&artist=Big+Bill+Broonzy&bucket=id%3Aspotify-WW&bucket=tracks&limit=true"});
+				
+				bpCollection = new BoilerplateCollection();
+				bpCollection.fetch();
+				
+				bpCollection.on("add", function(collection) {
+  					var songs = collection.toJSON().response.songs;
+					for (var i = 0; i < songs.length; i++) {
+                        var song = songs[i];
+                        console.log(song);
+	                    var tid = song.tracks[0].foreign_id.replace('-WW', '');
+	                    var link = "<div><a href='" + tid + "'>" + song.title + "</div>";
+	                    $('body').append(link);
+                     }
+				});
+				
+			});
+
+		</script>
+	</body>
+</html>

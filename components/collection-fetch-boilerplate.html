@@ -2,7 +2,7 @@
 <html>
 	<head>
 	    <meta charset="UTF-8">
-	    <title>Backbone Boilerplate:Collection Fetch/title>
+	    <title>Backbone Boilerplate:Collection Fetch</title>
 	</head>
 	<body>
 		<!-- functional library -->
@@ -29,6 +29,9 @@
 				
 				bpCollection.on("add", function(collection) {
   					var songs = collection.toJSON().response.songs;
+  					bpCollection.on("add",function(collection){});
+  					bpCollection.reset();
+  					bpCollection.add()
 					for (var i = 0; i < songs.length; i++) {
                         var song = songs[i];
                         console.log(song);
